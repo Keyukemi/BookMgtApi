@@ -31,7 +31,7 @@ namespace BookMgtApi.Controllers
             var book = _dbContext.Books.Include(ctx => ctx.Author).Where(book => book.Id == id);
             if (book.Count() == 0 || id <= 0)
             {
-               return  NotFound("No record");
+               return  NotFound("No record Found");
             }
             return Ok(book);
         }
@@ -43,7 +43,7 @@ namespace BookMgtApi.Controllers
             List<Book> books = _dbContext.Books.Include(ctx => ctx.Author).ToList();
             if (books == null)
             {
-                NotFound("Not item");
+                NotFound("Not item Found");
             }
             return Ok(books);
         }
@@ -82,7 +82,7 @@ namespace BookMgtApi.Controllers
             Book? dbBook = _dbContext.Books.Find(id);
             if (dbBook == null || id <= 0)
             {
-               return  NotFound("No record");
+               return  NotFound("No record Found");
             }
             dbBook.Title = book.Title;
             dbBook.ISBN = book.ISBN;
@@ -98,11 +98,11 @@ namespace BookMgtApi.Controllers
             Book? dbBook = _dbContext.Books.Find(id);
             if (dbBook == null || id <= 0)
             {
-               return  NotFound("No record");
+               return  NotFound("No record Found");
             }
             _dbContext.Books.Remove(dbBook);
             _dbContext.SaveChanges();
-            return Ok("Book record successfully deleted");
+            return Ok("Book successfully deleted");
         }
     }
 }

@@ -1,3 +1,5 @@
+#nullable enable
+
 using System;
 using BookMgtApi.Models;
 using Microsoft.AspNetCore.Mvc;

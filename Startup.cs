@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BookMgtApi.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -16,9 +18,12 @@ namespace BookMgtApi
 {
     public class Startup
     {
+        public string ConnectionString {get; set;}
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            ConnectionString = Configuration.GetConnectionString("DefaultConnectionString");
+            
         }
 
         public IConfiguration Configuration { get; }
@@ -32,6 +37,9 @@ namespace BookMgtApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "BookMgtApi", Version = "v1" });
             });
+
+            //configure DbContext with Database
+            services.AddDbContext<AppDbContext>(options => options.UseSqlServer(ConnectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

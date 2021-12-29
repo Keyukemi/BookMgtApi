@@ -1,3 +1,4 @@
+#nullable enable
 namespace BookMgtApi.Models
 {
     public class Login

@@ -1,5 +1,4 @@
 #nullable enable
-
 using System;
 using BookMgtApi.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -16,17 +15,32 @@ namespace BookMgtApi.Controllers
     [Route("api/[controller]")]
     public class BookApiController : ControllerBase
     {
-        private readonly ILogger<BookApiController> _logger;
         private readonly AppDbContext _dbContext;
 
-        public BookApiController(ILogger<BookApiController> logger, AppDbContext dbContext)
+        public BookApiController(AppDbContext dbContext)
         {
-            _logger = logger;
             _dbContext = dbContext;
         }
 
+
+        //Get all the books in the database
+
+        [HttpGet]
+        [AllowAnonymous]
+        public  ActionResult<List<Book>> GetAll() 
+        {
+            List<Book> books = _dbContext.Books.ToList();
+            if (books == null)
+            {
+                NotFound("Not item Found");
+            }
+            return Ok(books);
+        }
+
+        //Get a single book from the database
+
         [HttpGet("{id}")]
-        public ActionResult<Book> Get(int id)
+        public ActionResult<Book> SingleBook(int id)
         {
             var book = _dbContext.Books.Include(ctx => ctx.Author).Where(book => book.Id == id);
             if (book.Count() == 0 || id <= 0)
@@ -36,17 +50,7 @@ namespace BookMgtApi.Controllers
             return Ok(book);
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public  ActionResult<List<Book>> GetAll() 
-        {
-            List<Book> books = _dbContext.Books.Include(ctx => ctx.Author).ToList();
-            if (books == null)
-            {
-                NotFound("Not item Found");
-            }
-            return Ok(books);
-        }
+        //Add books to the database
 
         [HttpPost]
         public ActionResult<List<Book>> Add(List<Book> books)
@@ -67,6 +71,8 @@ namespace BookMgtApi.Controllers
                     newBook.ISBN = book.ISBN;
                     newBook.PublishedDate = book.PublishedDate;
                     newBook.Title =  book.Title;
+                    newBook.Price =  book.Price;
+                    newBook.Genre =  book.Genre;
                     _dbContext.Books.Add(newBook);
                     _dbContext.SaveChanges();
                     response = Created("New Author", newBook);
@@ -76,8 +82,10 @@ namespace BookMgtApi.Controllers
             return response;
         }
 
+        //Edit book details in the database
+
         [HttpPut("{id}")]
-        public ActionResult<Book> Update(int id, [FromBody] Book book)
+        public ActionResult<Book> EditBook(int id, [FromBody] Book book)
         {
             Book? dbBook = _dbContext.Books.Find(id);
             if (dbBook == null || id <= 0)
@@ -86,12 +94,15 @@ namespace BookMgtApi.Controllers
             }
             dbBook.Title = book.Title;
             dbBook.ISBN = book.ISBN;
+            dbBook.Price =  book.Price;
+            dbBook.Genre =  book.Genre;
             dbBook.PublishedDate = book.PublishedDate;
             _dbContext.Books.Update(dbBook);
             _dbContext.SaveChanges();
             return Ok(_dbContext.Books.Include(ctx => ctx.Author).Where( book => book.Id == id));
         }
 
+        //Delete a book in the database
         [HttpDelete("{id}")]
         public ActionResult<Book> Delete(int id)
         {

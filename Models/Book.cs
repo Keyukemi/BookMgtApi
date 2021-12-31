@@ -1,6 +1,7 @@
 //#nullable enable
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookMgtApi.Models
 {
@@ -11,7 +12,10 @@ namespace BookMgtApi.Models
         [Required]
         public string Title { get; set; }
         public int Year { get; set; }
+
+        [Column(TypeName = "decimal(18,4)")]
         public decimal Price { get; set; }
+        
         public string Genre { get; set; }
 
         public string ISBN { get; set; }

@@ -55,7 +55,7 @@ namespace BookMgtApi
          
          
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
         {
             if (env.IsDevelopment())
             {
@@ -78,6 +78,8 @@ namespace BookMgtApi
             {
                 endpoints.MapControllers();
             });
+            
+            MigrateDatabaseContexts(svp);
         }
     }
 }

@@ -48,8 +48,6 @@ namespace BookMgtApi
 
         public void MigrateDatabaseContexts(IServiceProvider svp)
         {
-            // var authenticationDbContext = svp.GetRequiredService<AuthenticationDbContext>();
-            // authenticationDbContext.Database.Migrate();
 
             var applicationDbContext = svp.GetRequiredService<AppDbContext>();
             applicationDbContext.Database.Migrate();

@@ -46,19 +46,12 @@ namespace BookMgtApi
 
         }
 
-        public void MigrateDatabaseContexts(IServiceProvider svp)
-        {
-
-            var applicationDbContext = svp.GetRequiredService<AppDbContext>();
-            applicationDbContext.Database.Migrate();
-        }
          
          
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IServiceProvider svp)
         {
-            if (env.IsDevelopment())
-            {
+            
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => 
@@ -66,7 +59,6 @@ namespace BookMgtApi
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "BookMgtApi v1");
                     c.RoutePrefix = string.Empty;
                 });
-            }
 
             app.UseHttpsRedirection();
 
@@ -78,6 +70,15 @@ namespace BookMgtApi
             {
                 endpoints.MapControllers();
             });
+            
+            MigrateDatabaseContexts(svp);
+        }
+
+        public void MigrateDatabaseContexts(IServiceProvider svp)
+        {
+
+            var applicationDbContext = svp.GetRequiredService<AppDbContext>();
+            applicationDbContext.Database.Migrate();
         }
     }
 }

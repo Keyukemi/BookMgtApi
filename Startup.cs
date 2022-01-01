@@ -45,6 +45,15 @@ namespace BookMgtApi
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(ConnectionString));
 
         }
+
+        public void MigrateDatabaseContexts(IServiceProvider svp)
+        {
+            // var authenticationDbContext = svp.GetRequiredService<AuthenticationDbContext>();
+            // authenticationDbContext.Database.Migrate();
+
+            var applicationDbContext = svp.GetRequiredService<AppDbContext>();
+            applicationDbContext.Database.Migrate();
+        }
          
          
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

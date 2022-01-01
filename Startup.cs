@@ -46,12 +46,6 @@ namespace BookMgtApi
 
         }
 
-        public void MigrateDatabaseContexts(IServiceProvider svp)
-        {
-
-            var applicationDbContext = svp.GetRequiredService<AppDbContext>();
-            applicationDbContext.Database.Migrate();
-        }
          
          
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -80,6 +74,13 @@ namespace BookMgtApi
             });
             
             MigrateDatabaseContexts(svp);
+        }
+
+        public void MigrateDatabaseContexts(IServiceProvider svp)
+        {
+
+            var applicationDbContext = svp.GetRequiredService<AppDbContext>();
+            applicationDbContext.Database.Migrate();
         }
     }
 }
